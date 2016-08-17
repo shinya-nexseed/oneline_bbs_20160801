@@ -85,7 +85,7 @@
     // ② データを取得しHTMLと連携して表示するプログラム
     echo '<br>';
     echo 'データ取得表示処理発動';
-    $sql = 'SELECT * FROM `posts`';
+    $sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     // $stmtにDBの全件データが入っている
@@ -101,6 +101,19 @@
   <meta charset="UTF-8">
   <title>セブ掲示版</title>
   <style>
+    p.nickname {
+      font-size: 14px;
+      color: #4C4C4C;
+      margin-bottom: 0px;
+    }
+    p span.created {
+      font-size: 10px;
+      color: #999999;
+    }
+    p.comment {
+      font-size: 18px;
+      margin-top: 0px;
+    }
     span {
       color: red;
     }
@@ -130,16 +143,21 @@
       <p><button type="submit" >つぶやく</button></p>
     </form>
     <!-- ここにニックネーム、つぶやいた内容、日付を表示する -->
-    <?php
-        while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo $record['nickname'];
-            echo ' : ';
-            echo $record['comment'];
-            echo ' - ';
-            echo $record['created'];
-            echo '<br>';
-        }
-    ?>
+    <?php while($record = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
+    <!-- whileの開始カッコ { の変わりに : を使う -->
+
+        <!-- 繰り返される処理 -->
+        <p class="nickname">
+          <?php echo $record['nickname']; ?>
+          <span class="created">
+            <?php echo $record['created']; ?>
+          </span>
+        </p>
+        <p class="comment">
+          <?php echo $record['comment']; ?>
+        </p>
+        <hr> <!-- 線を入れる -->
+    <?php endwhile; ?> <!-- whileのとじカッコ } の変わりに endwhile; を使う -->
 </body>
 </html>
 
